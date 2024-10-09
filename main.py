@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, Path
 from pydantic import BaseModel, EmailStr
+from typing import Annotated
 
 app = FastAPI()
 
@@ -39,7 +40,9 @@ def get_latest_item():
 
 
 @app.get("/items/{item_id}")  # var as a path
-def get_item_by_id(item_id: int):
+def get_item_by_id(
+    item_id: Annotated[int, Path(ge=1, lt=1_000_000)]
+):  # Annotated for validating value. First one is type, second is a special fastapi obj that allows to pass constraits
     return {"item": {"id": item_id}}
 
 
