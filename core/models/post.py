@@ -1,29 +1,22 @@
-from sqlalchemy import String, Text, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import TYPE_CHECKING
+from sqlalchemy import String, Text
+from sqlalchemy.orm import Mapped, mapped_column
 from core.models.base import Base
+from .mixins import UserRelationMixin
 
 # Специальный флаг, который вернет False в момент рантайма,
 # но для тайпчекинга мы сможем импортировать модель, и это не помешает в рантайме
-if TYPE_CHECKING:
-    from .user import User
 
 
-class Post(Base):
+class Post(UserRelationMixin, Base):
+    # Уже по умолчанию False в миксине
+    # _user_id_nullable = False
+    # _user_id_unique = False
+
+    _user_back_populates = "post"
+
     title: Mapped[str] = mapped_column(String(100), unique=False)
     body: Mapped[str] = mapped_column(
         Text,
         default="",  # дефолт для алхимии, объекты в пользовательском коде
         server_default="",  # дефолт для субд, на уровне субд вешается дефолтное значение
     )
-
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            "user.id"
-        ),  # вобще говоря можно передать в аргумент непосредственно модель
-        # и ее атрибут User.id, но тогда у нас будут циклические импорты
-    )
-    # ForeignKey создаёт связь на уровне базы данных.
-    # relationship создаёт удобный интерфейс на уровне Python-объектов для работы с этой связью.
-    # Соответственно этот код никак не влияет на фактические данные в БД
-    user: Mapped["User"] = relationship(back_populates="post")
