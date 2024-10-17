@@ -25,9 +25,10 @@ class UserRelationMixin:
     def user(cls) -> Mapped["User"]:
         return relationship(
             "User",
-            back_populates=cls._user_back_populates,
+            back_populates=cls._user_back_populates,  # Позволяет вам работать со связанными объектами как с атрибутами моделей
         )
 
         # ForeignKey создаёт связь на уровне базы данных.
+
         # relationship создаёт удобный интерфейс на уровне Python-объектов для работы с этой связью.
         # Соответственно этот код никак не влияет на фактические данные в БД

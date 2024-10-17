@@ -1,3 +1,5 @@
+from sqlalchemy import column
+from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr
 
 
@@ -18,3 +20,12 @@ class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(
         primary_key=True
     )  # so we dont need to write id in orm models
+
+    # Это рабочий, но хрен поймешь как он работает, вариант сделать общий стр и репр.
+    # Нужно гуглить что за inspect такой
+    # def __str__(self) -> str:
+    #     attrs = ", ".join(
+    #         f"{column.key}={repr(getattr(self, column.key))}"
+    #         for column in inspect(self).mapper.column_attrs
+    #     )
+    #     return f"{self.__class__.__name__}({attrs})"

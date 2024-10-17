@@ -20,3 +20,6 @@ class Post(UserRelationMixin, Base):
         default="",  # дефолт для алхимии, объекты в пользовательском коде
         server_default="",  # дефолт для субд, на уровне субд вешается дефолтное значение
     )
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id}, title={self.title}, body={self.body}, user_id={self.user_id})"
